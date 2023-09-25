@@ -13,6 +13,6 @@ func main(){
 		panic(err)
 	}
 	fmt.Printf("Hello %s! \n",user.Username)
-	fmt.Printf("type command\n")
+	fmt.Printf("type command to execute \n")
 	repl.Start(os.Stdin, os.Stdout)
 }
