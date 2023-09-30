@@ -367,3 +367,40 @@ func testInfixExpression(t *testing.T, exp ast.Expression, left interface{}, ope
 	return true
 }
 
+
+func TestBooleanExpression(t *testing.T){
+	tests := []struct {
+		stmt string
+		expected bool
+	}{
+		{ stmt: "true;", expected: true },
+		{ stmt: "false;", expected: false},
+	}
+
+	for _, tt := range tests {
+		t.Log(tt.stmt,tt.expected)
+		l := lexer.New(tt.stmt)
+		p := New(l)
+		program := p.ParseProgram()
+		checkParseErrors(t, p)
+
+		if len(program.Statements) != 1 {
+			t.Fatalf("len(program.Statements) not 1. got=%d", len(program.Statements))
+		}
+
+		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+		if !ok {
+			t.Fatalf("stmt not ast.ExpressionStatement. got=%T", stmt)
+		}
+
+		boolean, ok := stmt.Expression.(*ast.Boolean)
+		if !ok {
+			t.Fatalf("Expression not ast.Boolean. got=%T", stmt.Expression)
+		}
+		if boolean.Value != tt.expected {
+			t.Fatalf("Boolean value not %t. got=%t", tt.expected, boolean.Value)
+		}
+	}
+}	
+
+
